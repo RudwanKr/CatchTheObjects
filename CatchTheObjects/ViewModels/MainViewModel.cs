@@ -18,10 +18,21 @@ public partial class MainViewModel : ObservableObject
     private double _basketX;
 
     [ObservableProperty]
+    private string _title = "Catch The Objects";
+
+    [ObservableProperty]
+    private string _description = "Collect fruits and survive!";
+
+    private bool _isGameOver = false;
+
+    [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(LivesCollection))]
     private int _lives;
 
     private readonly Random _random = new();
+
+    public event Action<GameObject>? ItemMissed;
+    public event Action<GameObject>? ItemCaught;
 
     private double _spawnTimer;
     private double _spawnInterval = 1.6; // seconds
@@ -33,13 +44,13 @@ public partial class MainViewModel : ObservableObject
 
     private readonly List<ObjectType> _objectTypes = new()
     {
-        new ObjectType { Name = "Apple", Icon = "pack://application:,,,/images/apple.png", Speed = 1, Points = 5 },
-        new ObjectType { Name = "Banana", Icon = "pack://application:,,,/images/banana.png", Speed = 1.5, Points = 10 },
-        new ObjectType { Name = "Cherry", Icon = "pack://application:,,,/images/cherry.png", Speed =2, Points = 15 },
-        new ObjectType { Name = "Orange", Icon = "pack://application:,,,/images/orange.png", Speed = 2.5, Points = 20 },
-        new ObjectType { Name = "Grapes", Icon = "pack://application:,,,/images/grapes.png", Speed = 3, Points = 25 },
-        new ObjectType { Name = "Strawberry", Icon = "pack://application:,,,/images/Strawberry.png", Speed =3.5, Points = 30 },
-        new ObjectType { Name = "GoldHeart", Icon = "pack://application:,,,/images/Goldheart.png", Speed =2.5, Points = 0 }
+        new ObjectType { Name = "Apple", Icon = "pack://application:,,,/images/apple.png", Speed = 1, Points = 5, ThemeColor = Colors.Red },
+        new ObjectType { Name = "Banana", Icon = "pack://application:,,,/images/banana.png", Speed = 1.5, Points = 10, ThemeColor = Colors.Yellow },
+        new ObjectType { Name = "Cherry", Icon = "pack://application:,,,/images/cherry.png", Speed =2, Points = 15, ThemeColor = Colors.Pink },
+        new ObjectType { Name = "Orange", Icon = "pack://application:,,,/images/orange.png", Speed = 2.5, Points = 20, ThemeColor = Colors.Orange },
+        new ObjectType { Name = "Grapes", Icon = "pack://application:,,,/images/grapes.png", Speed = 3, Points = 25, ThemeColor = Colors.Purple },
+        new ObjectType { Name = "Strawberry", Icon = "pack://application:,,,/images/Strawberry.png", Speed =3.5, Points = 30, ThemeColor = Colors.HotPink },
+        new ObjectType { Name = "GoldHeart", Icon = "pack://application:,,,/images/Goldheart.png", Speed =2.5, Points = 0, ThemeColor = Colors.Gold }
     };
 
     public ObservableCollection<GameObject> Items { get; } = new();
@@ -67,6 +78,17 @@ public partial class MainViewModel : ObservableObject
         foreach (var type in _objectTypes)
         {
             type.SpeedMultiplier = 1 + (_gameTime / 120);
+        }
+    }
+
+    private void resetDifficulty()
+    {
+        _gameTime = 0;
+        _spawnTimer = 0;
+        _spawnInterval = 1.6;
+        foreach (var type in _objectTypes)
+        {
+            type.SpeedMultiplier = 1;
         }
     }
 
@@ -136,13 +158,13 @@ public partial class MainViewModel : ObservableObject
             bool caught =
                 item.Y > 430 &&
                 item.Y < 480 &&
-                Math.Abs((item.X + 22) - (BasketX + 45)) < 50;
+                Math.Abs((item.X + 22) - (BasketX + 55)) < 60;
 
             if (caught)
             {
                 HandleCatch(item);
             }
-            else if (item.Y > 490)
+            else if (item.Y > 485)
             {
                 HandleMiss(item);
             }
@@ -159,6 +181,7 @@ public partial class MainViewModel : ObservableObject
         else
         {
             Score += item.Type.Points;
+            ItemCaught?.Invoke(item);
             PlaySound("catch.wav");
         }
 
@@ -180,6 +203,8 @@ public partial class MainViewModel : ObservableObject
 
         OnPropertyChanged(nameof(LivesCollection));
 
+        ItemMissed?.Invoke(item);
+
         if (Lives <= 0)
         {
             GameOver();
@@ -188,9 +213,15 @@ public partial class MainViewModel : ObservableObject
     private void GameOver()
     {
         Lives = 0;
+        _isGameOver = true;
         IsGameRunning = false;
 
+        Title = "Game Over!";
+        Description = $"Your final score: {Score}";
+
         StopMusic();
+
+        resetDifficulty();
 
         PlaySound("gameover.wav");
 

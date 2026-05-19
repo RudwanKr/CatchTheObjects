@@ -1,4 +1,5 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
+using System.Windows.Media;
 
 namespace CatchTheObjects.Models;
 
@@ -21,4 +22,5 @@ public partial class ObjectType
     public double Speed { get; set; }
     public int Points { get; set; }
     public double SpeedMultiplier { get; set; } = 1;
+    public Color ThemeColor { get; set; }
 }

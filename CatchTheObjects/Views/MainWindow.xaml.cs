@@ -1,4 +1,6 @@
-﻿using CatchTheObjects.ViewModels;
+﻿using CatchTheObjects.CustomControles;
+using CatchTheObjects.Models;
+using CatchTheObjects.ViewModels;
 using System.Windows;
 using System.Windows.Media;
 
@@ -14,6 +16,20 @@ public partial class MainWindow : Window
 
         if (DataContext is MainViewModel vm)
         {
+            vm.ItemMissed += (item) =>
+            {
+                Dispatcher.Invoke(() => HandleMissEffect(item));
+            };
+
+            vm.ItemCaught += (item) => Dispatcher.Invoke(() =>
+            {
+                var effect = new AddPointsEffect();
+                GameCanvas.Children.Add(effect);
+                effect.Start(item.Type.ThemeColor, item.Type.Points, new Point(item.X + 22, item.Y + 10));
+
+                Task.Delay(1000).ContinueWith(_ => Dispatcher.Invoke(() => GameCanvas.Children.Remove(effect)));
+            });
+
             CompositionTarget.Rendering += (s, e) =>
             {
                 if (e is RenderingEventArgs args)
@@ -24,12 +40,13 @@ public partial class MainWindow : Window
                         return;
                     }
 
-                    double deltaTime =
-                        (args.RenderingTime - _lastFrameTime).TotalSeconds;
-
+                    double deltaTime = (args.RenderingTime - _lastFrameTime).TotalSeconds;
                     _lastFrameTime = args.RenderingTime;
 
-                    vm.Update(deltaTime);
+                    if (vm.IsGameRunning)
+                    {
+                        vm.Update(deltaTime);
+                    }
                 }
             };
 
@@ -46,5 +63,19 @@ public partial class MainWindow : Window
                 );
             };
         }
+    }
+
+    private void HandleMissEffect(GameObject item)
+    {
+        var effect = new VanishEffect();
+
+        GameCanvas.Children.Add(effect);
+
+        effect.Start(item.Type.ThemeColor, new Point(item.X + 22, item.Y + 11));
+
+        Task.Delay(1000).ContinueWith(_ =>
+        {
+            Dispatcher.Invoke(() => GameCanvas.Children.Remove(effect));
+        });
     }
 }
