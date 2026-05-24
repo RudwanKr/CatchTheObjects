@@ -147,7 +147,7 @@ public partial class MainViewModel : ObservableObject
     {
         ObjectType randomType;
 
-        bool spawnRare = _random.NextDouble() < 0.05;
+        bool spawnRare = _random.NextDouble() < 0.04;
 
         if (spawnRare)
         {
@@ -179,9 +179,6 @@ public partial class MainViewModel : ObservableObject
             X = spawnX,
             Y = -50,
             Type = randomType
-            //FallDuration = TimeSpan.FromSeconds(
-            //    700 / (randomType.Speed * randomType.SpeedMultiplier * 10)
-            //)
         });
     }
 

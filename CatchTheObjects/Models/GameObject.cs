@@ -10,8 +10,6 @@ public partial class GameObject : ObservableObject
 
     [ObservableProperty]
     private double _y;
-
-    public TimeSpan FallDuration { get; set; }
     public ObjectType Type { get; set; }
 }
 
