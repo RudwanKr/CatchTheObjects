@@ -10,8 +10,10 @@
 
   <ItemGroup>
     <None Remove="images\apple.png" />
+    <None Remove="images\avocado.png" />
     <None Remove="images\banana.png" />
     <None Remove="images\cherry.png" />
+    <None Remove="images\dragon.png" />
     <None Remove="images\GoldHeart.png" />
     <None Remove="images\GoldHeart.svg" />
     <None Remove="images\grapes.png" />
@@ -62,8 +64,10 @@
 
   <ItemGroup>
     <Resource Include="images\apple.png" />
+    <Resource Include="images\avocado.png" />
     <Resource Include="images\banana.png" />
     <Resource Include="images\cherry.png" />
+    <Resource Include="images\dragon.png" />
     <Resource Include="images\grapes.png" />
     <Resource Include="images\heart.png" />
     <Resource Include="images\orange.png" />

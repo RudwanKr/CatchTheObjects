@@ -26,6 +26,7 @@ public partial class MainViewModel : ObservableObject
 
     private bool _isGameOver = false;
     private readonly List<ObjectType> _normalObjects;
+    private readonly List<ObjectType> _rareObjects;
 
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(LivesCollection))]
@@ -42,6 +43,7 @@ public partial class MainViewModel : ObservableObject
     public event Action<GameObject>? ItemMissed;
     public event Action<GameObject>? ItemCaught;
 
+
     private double _spawnTimer;
     private double _spawnInterval = 1.6; // seconds
 
@@ -57,7 +59,9 @@ public partial class MainViewModel : ObservableObject
         new ObjectType { Name = "Cherry", Icon = "pack://application:,,,/images/cherry.png", Speed =2, Points = 15, ThemeColor = Colors.Pink },
         new ObjectType { Name = "Orange", Icon = "pack://application:,,,/images/orange.png", Speed = 2.5, Points = 20, ThemeColor = Colors.Orange },
         new ObjectType { Name = "Grapes", Icon = "pack://application:,,,/images/grapes.png", Speed = 3, Points = 25, ThemeColor = Colors.Purple },
-        new ObjectType { Name = "Strawberry", Icon = "pack://application:,,,/images/Strawberry.png", Speed =3.5, Points = 30, ThemeColor = Colors.HotPink },
+        new ObjectType { Name = "Strawberry", Icon = "pack://application:,,,/images/Strawberry.png", Speed =3.5, Points = 30, ThemeColor = Colors.Red },
+        new ObjectType { Name = "Avocado", Icon = "pack://application:,,,/images/avocado.png", Speed =3.5, Points = 35, ThemeColor = Colors.Green },
+        new ObjectType { Name = "Dragonfruit", Icon = "pack://application:,,,/images/dragon.png", Speed =3.5, Points = 100, ThemeColor = Colors.HotPink },
         new ObjectType { Name = "GoldHeart", Icon = "pack://application:,,,/images/heart.png", Speed =2.5, Points = 0, ThemeColor = Colors.Gold }
     };
 
@@ -68,7 +72,15 @@ public partial class MainViewModel : ObservableObject
         BasketX = 375;
 
         _normalObjects = _objectTypes
-            .Where(x => x.Name != "GoldHeart")
+            .Where(x =>
+                x.Name != "GoldHeart" &&
+                x.Name != "Dragonfruit")
+            .ToList();
+
+        _rareObjects = _objectTypes
+            .Where(x =>
+                x.Name == "GoldHeart" ||
+                x.Name == "Dragonfruit")
             .ToList();
 
         _catchSound = new SoundPlayer("sounds/catch.wav");
@@ -135,13 +147,17 @@ public partial class MainViewModel : ObservableObject
     {
         ObjectType randomType;
 
-        if (_random.NextDouble() < 0.05)
+        bool spawnRare = _random.NextDouble() < 0.05;
+
+        if (spawnRare)
         {
-            randomType = _objectTypes.First(x => x.Name == "GoldHeart");
+            randomType =
+                _rareObjects[_random.Next(_rareObjects.Count)];
         }
         else
         {
-            randomType = _normalObjects[_random.Next(_normalObjects.Count)];
+            randomType =
+                _normalObjects[_random.Next(_normalObjects.Count)];
         }
 
         double spawnX;
@@ -185,7 +201,12 @@ public partial class MainViewModel : ObservableObject
             if (caught)
                 HandleCatch(item);
             else if (item.Y > 485)
+            {
                 HandleMiss(item);
+
+                if (!IsGameRunning)
+                    return;
+            }
         }
     }
 
