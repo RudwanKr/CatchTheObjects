@@ -223,6 +223,13 @@
                                 RenderOptions.BitmapScalingMode="LowQuality"
                                 RenderTransformOrigin="0.5,0.5"
                                 Source="{Binding Type.Icon}">
+                                <Image.Effect>
+                                    <DropShadowEffect
+                                        BlurRadius="20"
+                                        Opacity="0.8"
+                                        ShadowDepth="0"
+                                        Color="{Binding Type.ThemeColor}" />
+                                </Image.Effect>
                                 <Image.RenderTransform>
                                     <RotateTransform />
                                 </Image.RenderTransform>
@@ -230,9 +237,14 @@
                                     <EventTrigger RoutedEvent="Loaded">
                                         <BeginStoryboard>
                                             <Storyboard>
-                                                <!--  REMOVED RepeatBehavior="Forever" to allow clean Vanish trigger  -->
-                                                <!--<DoubleAnimation Storyboard.TargetProperty="(Canvas.Top)"
-                                                                 From="0" To="500" Duration="{Binding FallDuration}" />-->
+                                                <!--  Add this inside your existing Storyboard  -->
+                                                <DoubleAnimation
+                                                    AutoReverse="True"
+                                                    RepeatBehavior="Forever"
+                                                    Storyboard.TargetProperty="(UIElement.Effect).(DropShadowEffect.BlurRadius)"
+                                                    From="10"
+                                                    To="25"
+                                                    Duration="0:0:1" />
                                                 <DoubleAnimation
                                                     AutoReverse="True"
                                                     RepeatBehavior="Forever"
