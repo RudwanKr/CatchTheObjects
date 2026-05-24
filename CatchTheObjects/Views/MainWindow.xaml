@@ -9,6 +9,8 @@
     Width="1000"
     Height="800"
     ResizeMode="NoResize"
+    SnapsToDevicePixels="True"
+    UseLayoutRounding="True"
     WindowStartupLocation="CenterScreen"
     mc:Ignorable="d">
 
@@ -17,20 +19,71 @@
     </Window.DataContext>
 
     <Window.Resources>
-        <!-- Background Wallpaper Brush -->
+        <!--  Background Wallpaper Brush  -->
         <VisualBrush
             x:Key="FruitWallpaperBrush"
             TileMode="Tile"
             Viewport="0,0,300,300"
             ViewportUnits="Absolute">
             <VisualBrush.Visual>
-                <Canvas Width="300" Height="300" Background="#8F5A29">
-                    <Image Canvas.Left="20" Canvas.Top="30" Width="50" Height="50" Opacity="0.35" Source="/images/apple.png" />
-                    <Image Canvas.Left="180" Canvas.Top="20" Width="60" Height="60" Opacity="0.35" Source="/images/banana.png" />
-                    <Image Canvas.Left="50" Canvas.Top="180" Width="45" Height="45" Opacity="0.35" Source="/images/orange.png" />
-                    <Image Canvas.Left="220" Canvas.Top="150" Width="50" Height="50" Opacity="0.35" Source="/images/cherry.png" />
-                    <Image Canvas.Left="120" Canvas.Top="110" Width="55" Height="55" Opacity="0.35" Source="/images/grapes.png" />
-                    <Image Canvas.Left="20" Canvas.Top="230" Width="40" Height="40" Opacity="0.35" Source="/images/strawberry.png" />
+                <Canvas
+                    Width="300"
+                    Height="300"
+                    Background="#8F5A29">
+                    <Image
+                        Canvas.Left="20"
+                        Canvas.Top="30"
+                        Width="50"
+                        Height="50"
+                        CacheMode="BitmapCache"
+                        Opacity="0.35"
+                        RenderOptions.BitmapScalingMode="LowQuality"
+                        Source="/images/apple.png" />
+                    <Image
+                        Canvas.Left="180"
+                        Canvas.Top="20"
+                        Width="60"
+                        Height="60"
+                        CacheMode="BitmapCache"
+                        Opacity="0.35"
+                        RenderOptions.BitmapScalingMode="LowQuality"
+                        Source="/images/banana.png" />
+                    <Image
+                        Canvas.Left="50"
+                        Canvas.Top="180"
+                        Width="45"
+                        Height="45"
+                        CacheMode="BitmapCache"
+                        Opacity="0.35"
+                        RenderOptions.BitmapScalingMode="LowQuality"
+                        Source="/images/orange.png" />
+                    <Image
+                        Canvas.Left="220"
+                        Canvas.Top="150"
+                        Width="50"
+                        Height="50"
+                        CacheMode="BitmapCache"
+                        Opacity="0.35"
+                        RenderOptions.BitmapScalingMode="LowQuality"
+                        Source="/images/cherry.png" />
+                    <Image
+                        Canvas.Left="120"
+                        Canvas.Top="110"
+                        Width="55"
+                        Height="55"
+                        CacheMode="BitmapCache"
+                        Opacity="0.35"
+                        RenderOptions.BitmapScalingMode="LowQuality"
+                        Source="/images/grapes.png" />
+                    <Image
+                        Canvas.Left="20"
+                        Canvas.Top="230"
+                        Width="40"
+                        Height="40"
+                        CacheMode="BitmapCache"
+                        Opacity="0.35"
+                        RenderOptions.BitmapScalingMode="LowQuality"
+                        Source="/images/strawberry.png" />
                 </Canvas>
             </VisualBrush.Visual>
         </VisualBrush>
@@ -40,9 +93,14 @@
         <StaticResource ResourceKey="FruitWallpaperBrush" />
     </Window.Background>
 
-    <Border Width="900" Height="650" BorderBrush="#5B3415" BorderThickness="8" ClipToBounds="True">
+    <Border
+        Width="900"
+        Height="650"
+        BorderBrush="#5B3415"
+        BorderThickness="8"
+        ClipToBounds="True">
         <Grid>
-            <!-- Sky Background -->
+            <!--  Sky Background  -->
             <Grid.Background>
                 <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
                     <GradientStop Offset="0" Color="#6EC6FF" />
@@ -50,19 +108,45 @@
                 </LinearGradientBrush>
             </Grid.Background>
 
-            <!-- Decorative Clouds -->
-            <Ellipse Width="180" Height="60" Margin="40,40,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Fill="#55FFFFFF" />
-            <Ellipse Width="220" Height="70" Margin="600,80,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Fill="#40FFFFFF" />
+            <!--  Decorative Clouds  -->
+            <Ellipse
+                Width="180"
+                Height="60"
+                Margin="40,40,0,0"
+                HorizontalAlignment="Left"
+                VerticalAlignment="Top"
+                Fill="#55FFFFFF" />
+            <Ellipse
+                Width="220"
+                Height="70"
+                Margin="600,80,0,0"
+                HorizontalAlignment="Left"
+                VerticalAlignment="Top"
+                Fill="#40FFFFFF" />
 
-            <!-- Ground (Placed behind Canvas) -->
-            <Border Height="40" VerticalAlignment="Bottom" Background="#4CAF50" CornerRadius="0">
+            <!--  Ground (Placed behind Canvas)  -->
+            <Border
+                Height="40"
+                VerticalAlignment="Bottom"
+                Background="#4CAF50"
+                CornerRadius="0">
                 <Border.Effect>
-                    <DropShadowEffect BlurRadius="20" Direction="270" Opacity="0.5" ShadowDepth="5" />
+                    <DropShadowEffect
+                        BlurRadius="20"
+                        Direction="270"
+                        Opacity="0.5"
+                        ShadowDepth="5" />
                 </Border.Effect>
             </Border>
 
-            <!-- Top HUD -->
-            <Border Height="70" Margin="20" VerticalAlignment="Top" Background="#66000000" CornerRadius="20" Panel.ZIndex="10">
+            <!--  Top HUD  -->
+            <Border
+                Height="70"
+                Margin="20"
+                VerticalAlignment="Top"
+                Panel.ZIndex="10"
+                Background="#66000000"
+                CornerRadius="20">
                 <Grid Margin="20,0">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*" />
@@ -70,11 +154,21 @@
                     </Grid.ColumnDefinitions>
 
                     <StackPanel VerticalAlignment="Center">
-                        <TextBlock FontSize="16" Foreground="#DDFFFFFF" Text="SCORE" />
-                        <TextBlock FontSize="32" FontWeight="Bold" Foreground="White" Text="{Binding Score}" />
+                        <TextBlock
+                            FontSize="16"
+                            Foreground="#DDFFFFFF"
+                            Text="SCORE" />
+                        <TextBlock
+                            FontSize="32"
+                            FontWeight="Bold"
+                            Foreground="White"
+                            Text="{Binding Score}" />
                     </StackPanel>
 
-                    <ItemsControl Grid.Column="1" VerticalAlignment="Center" ItemsSource="{Binding LivesCollection}">
+                    <ItemsControl
+                        Grid.Column="1"
+                        VerticalAlignment="Center"
+                        ItemsSource="{Binding LivesCollection}">
                         <ItemsControl.ItemsPanel>
                             <ItemsPanelTemplate>
                                 <StackPanel Orientation="Horizontal" />
@@ -82,8 +176,17 @@
                         </ItemsControl.ItemsPanel>
                         <ItemsControl.ItemTemplate>
                             <DataTemplate>
-                                <Border Margin="3" Padding="4" Background="#33FFFFFF" CornerRadius="10">
-                                    <Image Width="28" Height="28" Source="/images/heart.png" />
+                                <Border
+                                    Margin="3"
+                                    Padding="4"
+                                    Background="#33FFFFFF"
+                                    CornerRadius="10">
+                                    <Image
+                                        Width="28"
+                                        Height="28"
+                                        CacheMode="BitmapCache"
+                                        RenderOptions.BitmapScalingMode="LowQuality"
+                                        Source="/images/heart.png" />
                                 </Border>
                             </DataTemplate>
                         </ItemsControl.ItemTemplate>
@@ -91,10 +194,14 @@
                 </Grid>
             </Border>
 
-            <!-- Game Canvas -->
-            <Canvas x:Name="GameCanvas" Margin="0,80,0,40" Background="Transparent" ClipToBounds="True" >
+            <!--  Game Canvas  -->
+            <Canvas
+                x:Name="GameCanvas"
+                Margin="0,80,0,40"
+                Background="Transparent"
+                ClipToBounds="True">
 
-                <!-- Falling Items -->
+                <!--  Falling Items  -->
                 <ItemsControl ItemsSource="{Binding Items}">
                     <ItemsControl.ItemsPanel>
                         <ItemsPanelTemplate>
@@ -109,7 +216,13 @@
                     </ItemsControl.ItemContainerStyle>
                     <ItemsControl.ItemTemplate>
                         <DataTemplate>
-                            <Image Width="45" Height="45" RenderTransformOrigin="0.5,0.5" Source="{Binding Type.Icon}">
+                            <Image
+                                Width="45"
+                                Height="45"
+                                CacheMode="BitmapCache"
+                                RenderOptions.BitmapScalingMode="LowQuality"
+                                RenderTransformOrigin="0.5,0.5"
+                                Source="{Binding Type.Icon}">
                                 <Image.RenderTransform>
                                     <RotateTransform />
                                 </Image.RenderTransform>
@@ -117,11 +230,16 @@
                                     <EventTrigger RoutedEvent="Loaded">
                                         <BeginStoryboard>
                                             <Storyboard>
-                                                <!-- REMOVED RepeatBehavior="Forever" to allow clean Vanish trigger -->
-                                                <DoubleAnimation Storyboard.TargetProperty="(Canvas.Top)"
-                                                                 From="0" To="500" Duration="{Binding FallDuration}" />
-                                                <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(RotateTransform.Angle)"
-                                                                 From="-10" To="10" Duration="0:0:0.5" AutoReverse="True" RepeatBehavior="Forever" />
+                                                <!--  REMOVED RepeatBehavior="Forever" to allow clean Vanish trigger  -->
+                                                <!--<DoubleAnimation Storyboard.TargetProperty="(Canvas.Top)"
+                                                                 From="0" To="500" Duration="{Binding FallDuration}" />-->
+                                                <DoubleAnimation
+                                                    AutoReverse="True"
+                                                    RepeatBehavior="Forever"
+                                                    Storyboard.TargetProperty="(UIElement.RenderTransform).(RotateTransform.Angle)"
+                                                    From="-10"
+                                                    To="10"
+                                                    Duration="0:0:0.5" />
                                             </Storyboard>
                                         </BeginStoryboard>
                                     </EventTrigger>
@@ -131,19 +249,35 @@
                     </ItemsControl.ItemTemplate>
                 </ItemsControl>
 
-                <!-- Basket -->
-                <Grid Canvas.Left="{Binding BasketX}" Canvas.Bottom="0" Width="110" Height="50">
+                <!--  Basket  -->
+                <Grid
+                    Canvas.Left="{Binding BasketX}"
+                    Canvas.Bottom="0"
+                    Width="110"
+                    Height="50">
                     <Ellipse Margin="10,35,10,0" Fill="#44000000" />
-                    <Border Background="#8E5A2B" BorderBrush="#5C3A1E" BorderThickness="3" CornerRadius="15">
+                    <Border
+                        Background="#8E5A2B"
+                        BorderBrush="#5C3A1E"
+                        BorderThickness="3"
+                        CornerRadius="15">
                         <Border.Effect>
-                            <DropShadowEffect BlurRadius="10" Opacity="0.4" ShadowDepth="4" />
+                            <DropShadowEffect
+                                BlurRadius="10"
+                                Opacity="0.4"
+                                ShadowDepth="4" />
                         </Border.Effect>
                     </Border>
-                    <Border Height="10" Margin="0,-5,0,0" VerticalAlignment="Top" Background="#B8793D" CornerRadius="10" />
+                    <Border
+                        Height="10"
+                        Margin="0,-5,0,0"
+                        VerticalAlignment="Top"
+                        Background="#B8793D"
+                        CornerRadius="10" />
                 </Grid>
             </Canvas>
 
-            <!-- Menu Overlay -->
+            <!--  Menu Overlay  -->
             <Grid Background="#AA000000">
                 <Grid.Style>
                     <Style TargetType="Grid">
@@ -155,20 +289,51 @@
                         </Style.Triggers>
                     </Style>
                 </Grid.Style>
-                <Border Width="420" Padding="40" HorizontalAlignment="Center" VerticalAlignment="Center" Background="#CC1E1E1E" CornerRadius="30">
+                <Border
+                    Width="420"
+                    Padding="40"
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Center"
+                    Background="#CC1E1E1E"
+                    CornerRadius="30">
                     <StackPanel>
                         <!--<TextBlock Margin="0,0,0,10" HorizontalAlignment="Center" FontSize="40" FontWeight="Bold" Foreground="White" Text="Catch The Objects" />
                         <TextBlock Margin="0,0,0,35" HorizontalAlignment="Center" FontSize="18" Foreground="#CCCCCC" Text="Collect fruits and survive!" />-->
-                        <TextBlock Margin="0,0,0,10" HorizontalAlignment="Center" FontSize="40" FontWeight="Bold" Foreground="White" Text="{Binding Title}" />
-                        <TextBlock Margin="0,0,0,35" HorizontalAlignment="Center" FontSize="18" Foreground="#CCCCCC" Text="{Binding Description}" />
-                        <Button Width="240" Height="65" HorizontalAlignment="Center" Background="#2ECC71" BorderThickness="0" Command="{Binding StartGameCommand}" Content="PLAY NOW" Cursor="Hand" FontSize="24" FontWeight="Bold" Foreground="White">
+                        <TextBlock
+                            Margin="0,0,0,10"
+                            HorizontalAlignment="Center"
+                            FontSize="40"
+                            FontWeight="Bold"
+                            Foreground="White"
+                            Text="{Binding Title}" />
+                        <TextBlock
+                            Margin="0,0,0,35"
+                            HorizontalAlignment="Center"
+                            FontSize="18"
+                            Foreground="#CCCCCC"
+                            Text="{Binding Description}" />
+                        <Button
+                            Width="240"
+                            Height="65"
+                            HorizontalAlignment="Center"
+                            Background="#2ECC71"
+                            BorderThickness="0"
+                            Command="{Binding StartGameCommand}"
+                            Content="PLAY NOW"
+                            Cursor="Hand"
+                            FontSize="24"
+                            FontWeight="Bold"
+                            Foreground="White">
                             <Button.Resources>
                                 <Style TargetType="Border">
                                     <Setter Property="CornerRadius" Value="20" />
                                 </Style>
                             </Button.Resources>
                             <Button.Effect>
-                                <DropShadowEffect BlurRadius="15" Opacity="0.5" ShadowDepth="5" />
+                                <DropShadowEffect
+                                    BlurRadius="15"
+                                    Opacity="0.5"
+                                    ShadowDepth="5" />
                             </Button.Effect>
                         </Button>
                     </StackPanel>

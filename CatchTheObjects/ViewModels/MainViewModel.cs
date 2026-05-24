@@ -2,6 +2,7 @@
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using System.Collections.ObjectModel;
+using System.Media;
 using System.Windows.Media;
 
 namespace CatchTheObjects.ViewModels;
@@ -24,12 +25,19 @@ public partial class MainViewModel : ObservableObject
     private string _description = "Collect fruits and survive!";
 
     private bool _isGameOver = false;
+    private readonly List<ObjectType> _normalObjects;
 
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(LivesCollection))]
     private int _lives;
 
     private readonly Random _random = new();
+
+    private readonly SoundPlayer _catchSound;
+    private readonly SoundPlayer _missSound;
+    private readonly SoundPlayer _heartSound;
+    private readonly SoundPlayer _gameOverSound;
+    private readonly MediaPlayer _bgMusic;
 
     public event Action<GameObject>? ItemMissed;
     public event Action<GameObject>? ItemCaught;
@@ -50,7 +58,7 @@ public partial class MainViewModel : ObservableObject
         new ObjectType { Name = "Orange", Icon = "pack://application:,,,/images/orange.png", Speed = 2.5, Points = 20, ThemeColor = Colors.Orange },
         new ObjectType { Name = "Grapes", Icon = "pack://application:,,,/images/grapes.png", Speed = 3, Points = 25, ThemeColor = Colors.Purple },
         new ObjectType { Name = "Strawberry", Icon = "pack://application:,,,/images/Strawberry.png", Speed =3.5, Points = 30, ThemeColor = Colors.HotPink },
-        new ObjectType { Name = "GoldHeart", Icon = "pack://application:,,,/images/Goldheart.png", Speed =2.5, Points = 0, ThemeColor = Colors.Gold }
+        new ObjectType { Name = "GoldHeart", Icon = "pack://application:,,,/images/heart.png", Speed =2.5, Points = 0, ThemeColor = Colors.Gold }
     };
 
     public ObservableCollection<GameObject> Items { get; } = new();
@@ -58,17 +66,36 @@ public partial class MainViewModel : ObservableObject
     public MainViewModel()
     {
         BasketX = 375;
+
+        _normalObjects = _objectTypes
+            .Where(x => x.Name != "GoldHeart")
+            .ToList();
+
+        _catchSound = new SoundPlayer("sounds/catch.wav");
+        _missSound = new SoundPlayer("sounds/miss.wav");
+        _heartSound = new SoundPlayer("sounds/heart.wav");
+        _gameOverSound = new SoundPlayer("sounds/gameover.wav");
+        _bgMusic = new MediaPlayer();
+
+        _catchSound.Load();
+        _missSound.Load();
+        _heartSound.Load();
+        _gameOverSound.Load();
+
+        _bgMusic.MediaEnded += BgMusic_MediaEnded;
     }
 
     public void Update(double deltaTime)
     {
+        if (!IsGameRunning)
+            return;
         _gameTime += deltaTime;
 
         UpdateDifficulty();
 
         HandleSpawning(deltaTime);
 
-        UpdateObjects();
+        UpdateObjects(deltaTime);
     }
 
     private void UpdateDifficulty()
@@ -108,18 +135,13 @@ public partial class MainViewModel : ObservableObject
     {
         ObjectType randomType;
 
-        // Rare heart spawn
         if (_random.NextDouble() < 0.05)
         {
             randomType = _objectTypes.First(x => x.Name == "GoldHeart");
         }
         else
         {
-            var normalObjects = _objectTypes
-                .Where(x => x.Name != "GoldHeart")
-                .ToList();
-
-            randomType = normalObjects[_random.Next(normalObjects.Count)];
+            randomType = _normalObjects[_random.Next(_normalObjects.Count)];
         }
 
         double spawnX;
@@ -140,34 +162,30 @@ public partial class MainViewModel : ObservableObject
         {
             X = spawnX,
             Y = -50,
-            Type = randomType,
-            FallDuration = TimeSpan.FromSeconds(
-                700 / (randomType.Speed * randomType.SpeedMultiplier * 10)
-            )
+            Type = randomType
+            //FallDuration = TimeSpan.FromSeconds(
+            //    700 / (randomType.Speed * randomType.SpeedMultiplier * 10)
+            //)
         });
     }
 
-    private void UpdateObjects()
+    private void UpdateObjects(double deltaTime)
     {
-        if (!IsGameRunning) return;
-
-        foreach (var item in Items.ToList())
+        for (int i = Items.Count - 1; i >= 0; i--)
         {
-            item.Y += item.Type.Speed * item.Type.SpeedMultiplier;
+            var item = Items[i];
 
-            bool caught =
-                item.Y > 430 &&
-                item.Y < 480 &&
+            double speed = item.Type.Speed * item.Type.SpeedMultiplier * 220;
+
+            item.Y += speed * deltaTime;
+
+            bool caught = item.Y > 430 && item.Y < 480 &&
                 Math.Abs((item.X + 22) - (BasketX + 55)) < 60;
 
             if (caught)
-            {
                 HandleCatch(item);
-            }
             else if (item.Y > 485)
-            {
                 HandleMiss(item);
-            }
         }
     }
 
@@ -176,13 +194,13 @@ public partial class MainViewModel : ObservableObject
         if (item.Type.Name == "GoldHeart")
         {
             Lives++;
-            PlaySound("heart.mp3");
+            _heartSound.Play();
         }
         else
         {
             Score += item.Type.Points;
             ItemCaught?.Invoke(item);
-            PlaySound("catch.wav");
+            _catchSound.Play();
         }
 
         Items.Remove(item);
@@ -199,7 +217,7 @@ public partial class MainViewModel : ObservableObject
 
         Lives--;
 
-        PlaySound("miss.mp3");
+        _missSound.Play();
 
         OnPropertyChanged(nameof(LivesCollection));
 
@@ -219,24 +237,23 @@ public partial class MainViewModel : ObservableObject
         Title = "Game Over!";
         Description = $"Your final score: {Score}";
 
-        StopMusic();
-
         resetDifficulty();
 
-        PlaySound("gameover.wav");
+        _gameOverSound.Play();
 
         Items.Clear();
     }
 
-    partial void OnBasketXChanging(double value)
+    partial void OnBasketXChanged(double value)
     {
         const double minX = 0;
         const double maxX = 720;
 
-        if (value < minX)
-            _basketX = minX;
-        else if (value > maxX)
-            _basketX = maxX;
+        if (BasketX < minX)
+            BasketX = minX;
+
+        if (BasketX > maxX)
+            BasketX = maxX;
     }
 
     [RelayCommand]
@@ -252,29 +269,23 @@ public partial class MainViewModel : ObservableObject
         OnPropertyChanged(nameof(LivesCollection));
     }
 
-    public void PlaySound(string fileName)
-    {
-        var player = new MediaPlayer();
-
-        player.Open(new Uri(AppDomain.CurrentDomain.BaseDirectory + "sounds/" + fileName));
-        player.Play();
-    }
-
-    private MediaPlayer _bgMusic = new MediaPlayer();
-
     public void StartMusic()
     {
-        _bgMusic.Open(new Uri(AppDomain.CurrentDomain.BaseDirectory + "sounds/background.mp3"));
-
-        _bgMusic.MediaEnded += (s, e) =>
-        {
-            _bgMusic.Position = TimeSpan.Zero;
-            _bgMusic.Play();
-        };
+        _bgMusic.Open(
+            new Uri(
+                AppDomain.CurrentDomain.BaseDirectory +
+                "sounds/background.wav"
+            )
+        );
 
         _bgMusic.Volume = 0.3;
+
         _bgMusic.Play();
     }
 
-    public void StopMusic() => _bgMusic.Stop();
+    private void BgMusic_MediaEnded(object? sender, EventArgs e)
+    {
+        _bgMusic.Position = TimeSpan.Zero;
+        _bgMusic.Play();
+    }
 }

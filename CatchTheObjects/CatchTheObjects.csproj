@@ -13,19 +13,23 @@
     <None Remove="images\banana.png" />
     <None Remove="images\cherry.png" />
     <None Remove="images\GoldHeart.png" />
+    <None Remove="images\GoldHeart.svg" />
     <None Remove="images\grapes.png" />
     <None Remove="images\heart.png" />
     <None Remove="images\orange.png" />
     <None Remove="images\Strawberry.png" />
     <None Remove="sounds\background.mp3" />
+    <None Remove="sounds\background.wav" />
     <None Remove="sounds\catch.wav" />
     <None Remove="sounds\gameOver.wav" />
     <None Remove="sounds\heart.mp3" />
+    <None Remove="sounds\heart.wav" />
     <None Remove="sounds\miss.mp3" />
+    <None Remove="sounds\miss.wav" />
   </ItemGroup>
 
   <ItemGroup>
-    <Content Include="sounds\background.mp3">
+    <Content Include="sounds\background.wav">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="sounds\catch.wav">
@@ -37,7 +41,13 @@
     <Content Include="sounds\heart.mp3">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="sounds\miss.mp3">
+    <Content Include="sounds\heart.wav">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="sounds\miss.wav">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="sounds\reward.wav">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
@@ -54,7 +64,6 @@
     <Resource Include="images\apple.png" />
     <Resource Include="images\banana.png" />
     <Resource Include="images\cherry.png" />
-    <Resource Include="images\GoldHeart.png" />
     <Resource Include="images\grapes.png" />
     <Resource Include="images\heart.png" />
     <Resource Include="images\orange.png" />
