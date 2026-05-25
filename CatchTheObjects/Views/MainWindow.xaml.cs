@@ -54,7 +54,7 @@ public partial class MainWindow : Window
             {
                 Point mousePos = e.GetPosition(GameCanvas);
 
-                double newX = mousePos.X - 45;
+                double newX = mousePos.X - 55;
 
                 vm.BasketX = Math.Clamp(
                     newX,

@@ -147,7 +147,7 @@ public partial class MainViewModel : ObservableObject
     {
         ObjectType randomType;
 
-        bool spawnRare = _random.NextDouble() < 0.04;
+        bool spawnRare = _random.NextDouble() < 0.1;
 
         if (spawnRare)
         {
